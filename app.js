@@ -9,13 +9,15 @@ require('./typeorm-db')
 var st = require('st');
 var crypto = require('crypto');
 var express = require('express');
-var http = require('http');
+var https = require('https');
 var path = require('path');
 var ejsEngine = require('ejs-locals');
 var bodyParser = require('body-parser');
 var session = require('express-session')
 var methodOverride = require('method-override');
 var logger = require('morgan');
+var csrf = require('csurf');
+var helmet = require('helmet');
 var errorHandler = require('errorhandler');
 var optional = require('optional');
 var marked = require('marked');
@@ -26,6 +28,8 @@ var cons = require('consolidate');
 const hbs = require('hbs')
 
 var app = express();
+app.use(helmet());
+app.use(csrf());
 var routes = require('./routes');
 var routesUsers = require('./routes/users.js')
 
@@ -40,7 +44,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(session({
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET,
   name: 'connect.sid',
   cookie: { path: '/' }
 }))
@@ -80,9 +84,9 @@ if (app.get('env') == 'development') {
   app.use(errorHandler());
 }
 
-var token = 'SECRET_TOKEN_f8ed84e8f41e4146403dd4a6bbcea5e418d23a9';
+var token = process.env.SECRET_TOKEN;
 console.log('token: ' + token);
 
-http.createServer(app).listen(app.get('port'), function () {
+https.createServer(options, app).listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });

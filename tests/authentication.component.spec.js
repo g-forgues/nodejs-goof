@@ -21,18 +21,18 @@ describe('Component Tests', () => {
     test('should call Auth.changePassword when passwords match', () => {
       // GIVEN
       // deepcode ignore NoHardcodedPasswords/test: <please specify a reason of ignoring this>
-      comp.password = comp.confirmPassword = 'myPassword';
+      comp.password = comp.confirmPassword = process.env.DEFAULT_PASSWORD;
 
       // WHEN
       comp.changePassword();
 
       // THEN
-      assert(service.save).toHaveBeenCalledWith('myPassword');
+      assert(service.save).toHaveBeenCalledWith(process.env.DEFAULT_PASSWORD);
     });
 
     test('should set success to OK upon success', function() {
       // GIVEN
-      comp.password = comp.confirmPassword = 'myPassword';
+      comp.password = process.env.DEFAULT_PASSWORD;
 
       // WHEN
       comp.changePassword();
@@ -45,7 +45,7 @@ describe('Component Tests', () => {
 
     test('should notify of error if change password fails', function() {
       // GIVEN
-      comp.password = comp.confirmPassword = 'myPassword';
+      comp.password = comp.confirmPassword = process.env.DEFAULT_PASSWORD;
 
       // WHEN
       comp.changePassword();
